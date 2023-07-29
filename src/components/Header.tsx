@@ -8,6 +8,8 @@ import {
   useColorMode,
   useColorModeValue,
   useDisclosure,
+  VStack,
+  Text,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
@@ -36,12 +38,17 @@ export default function Header() {
       px={10}
       borderBottomWidth={1}
     >
-      <Box color={logoColor}>
+      <Box color={logoColor} w="60">
         <Link to={"/"}>
           <FaAirbnb size={"48"} />
         </Link>
       </Box>
-      <HStack spacing={2}>
+      <Box w="60">
+        <Text as="i" fontSize={45} fontWeight="bold">
+          AudiGo
+        </Text>
+      </Box>
+      <HStack spacing={2} w="50">
         <IconButton
           onClick={toggleColorMode}
           variant={"ghost"}
