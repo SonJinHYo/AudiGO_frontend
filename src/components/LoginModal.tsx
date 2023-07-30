@@ -12,22 +12,28 @@ import {
   ModalOverlay,
   VStack,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { FaUserNinja, FaLock } from "react-icons/fa";
 import SocialLogin from "./SocialLogin";
-
-interface LoginModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { IForm, LoginModalProps } from "../types";
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>();
+  const onSubmit = (data: IForm) => {
+    console.log(data);
+  };
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Log in</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody as="form" onSubmit={handleSubmit(onSubmit)}>
           <VStack>
             <InputGroup size={"md"}>
               <InputLeftElement
@@ -37,7 +43,14 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                   </Box>
                 }
               />
-              <Input variant={"filled"} placeholder="Username" />
+              <Input
+                isInvalid={Boolean(errors.username?.message)}
+                {...register("username", {
+                  required: "Please write a username",
+                })}
+                variant={"filled"}
+                placeholder="Username"
+              />
             </InputGroup>
             <InputGroup>
               <InputLeftElement
@@ -47,10 +60,17 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                   </Box>
                 }
               />
-              <Input variant={"filled"} placeholder="Password" />
+              <Input
+                isInvalid={Boolean(errors.password?.message)}
+                {...register("password", {
+                  required: "Please write a password",
+                })}
+                variant={"filled"}
+                placeholder="Password"
+              />
             </InputGroup>
           </VStack>
-          <Button mt={4} colorScheme={"red"} w="100%">
+          <Button type="submit" mt={4} colorScheme={"red"} w="100%">
             Log in
           </Button>
           <SocialLogin />
@@ -58,4 +78,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       </ModalContent>
     </Modal>
   );
+}
+function useForm<T>(): {
+  register: any;
+  handleSubmit: any;
+  formState: { errors: any };
+} {
+  throw new Error("Function not implemented.");
 }
