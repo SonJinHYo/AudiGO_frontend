@@ -1,4 +1,4 @@
-import { FaAirbnb, FaMoon, FaSun } from "react-icons/fa";
+import { FaHome, FaMoon, FaSun } from "react-icons/fa";
 import {
   Box,
   Button,
@@ -16,6 +16,7 @@ import {
   MenuItem,
   useToast,
   Flex,
+  Spacer,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
@@ -39,7 +40,7 @@ export default function Header() {
   } = useDisclosure();
 
   const { toggleColorMode } = useColorMode();
-  const logoColor = useColorModeValue("red.500", "red.200");
+  const logoColor = useColorModeValue("white.500", "black.200");
   const Icon = useColorModeValue(FaMoon, FaSun);
 
   const toast = useToast();
@@ -59,10 +60,6 @@ export default function Header() {
       description: "See you later!",
     });
   };
-  const myPage = async () => {
-    await logOut();
-    queryClient.refetchQueries(["me"]);
-  };
 
   return (
     <HStack
@@ -71,17 +68,21 @@ export default function Header() {
       px={10}
       borderBottomWidth={1}
     >
-      <Box color={logoColor} w="60">
+      <Box w="10%"></Box>
+      <Box color={logoColor} w="20%">
         <Link to={"/"}>
-          <FaAirbnb size={"48"} />
+          <FaHome size={"48"} />
         </Link>
       </Box>
-      <HStack w="60">
-        <Text as="i" fontSize={45} fontWeight="bold">
-          AudiGo
-        </Text>
-      </HStack>
-      <Flex gap={2} alignItems="center">
+      <Box w="10%"></Box>
+
+      <Box as="i" fontSize={50} fontWeight="bold" w="20%">
+        AudiGo
+      </Box>
+      <Box w="10%"></Box>
+
+      <Flex gap={2} alignItems="center" w="20%">
+        <Spacer />
         <IconButton
           onClick={toggleColorMode}
           variant={"ghost"}
@@ -118,6 +119,7 @@ export default function Header() {
       </Flex>
       <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       <SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose} />
+      <Box w="10%"></Box>
     </HStack>
   );
 }

@@ -5,14 +5,9 @@ import {
   FormControl,
   Heading,
   Input,
-  useToast,
   VStack,
   Text,
-  useBoolean,
-  useQuery,
   HStack,
-  Highlight,
-  Grid,
   GridItem,
   Modal,
   ModalOverlay,
@@ -21,61 +16,40 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Flex,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
-import { uploadAudio } from "../api";
+import { updateScript, uploadAudio } from "../api";
 import ProtectedPage from "../components/ProtectedPage";
-
-//   import { createPhoto, getUploadURL, uploadImage } from "../api";
-//   import ProtectedPage from "../components/ProtectedPage";
-//   import ViewPhoto from "../components/ViewPhoto";
-//   import { Helmet } from "react-helmet";
-
-interface IForm {
-  file: FileList;
-  title: string;
-  myWords: string;
-}
-
-interface IUploadURLResponse {
-  id: string;
-  uploadURL: string;
-}
-
-interface IScriptInfo {
-  origin_script: string;
-  modified_script: string;
-  charecters: Array<ICharecter>;
-  audio_pk: number;
-  audio_src: string;
-}
-
-interface ICharecter {
-  start_time: string;
-  end_time: string;
-  alternatives: Array<IAlternative>;
-  type: string;
-}
-
-interface IAlternative {
-  confidence: string;
-  content: string;
-}
+import { IForm, ICharecter } from "../types";
 
 export default function CreateScript() {
   const { register, handleSubmit, watch, reset } = useForm<IForm>();
 
-  const { userPk } = useParams();
-  const toast = useToast();
   const [words, setWords] = useState<Set<string>>(new Set()); // 단어 배열 상태 초기화
   const [inputValue, setInputValue] = useState<string>(""); // 입력 상자의 상태 초기화
   const [flag, setFlag] = useState(false);
   const [originScript, setOriginScript] = useState<string>("");
   const [modifiedScript, setModifiedScript] = useState<string>("");
   const [charecters, setCharecters] = useState<ICharecter[]>([]);
+
+  const uploadAudioMutation = useMutation(uploadAudio, {
+    onSuccess: (result: any) => {
+      setOriginScript(result.origin_script);
+      setModifiedScript(result.modified_script);
+      setCharecters(result.charecters);
+      setFlag(true);
+    },
+  });
+
+  const updateScriptMutation = useMutation(updateScript, {
+    onSuccess: (data: any) => {
+      console.log(data);
+      console.log(data.finalScript);
+    },
+  });
 
   // 단어 추가 함수
   const addWord = () => {
@@ -85,23 +59,14 @@ export default function CreateScript() {
     }
   };
 
-  const uploadAudioMutation = useMutation(uploadAudio, {
-    onSuccess: (result: any) => {
-      setOriginScript(result.origin_script);
-      setModifiedScript(result.modified_script);
-      setCharecters(result.charecters);
-      setFlag(true);
-      console.log(result.charecters);
-    },
-  });
-
   const onSubmit = (data: IForm) => {
-    const wordsArray = Array.from(words);
-    const myWordJson = JSON.stringify(wordsArray);
-    data.myWords = myWordJson;
-    const { file, title, myWords } = data;
+    const { file, title } = data;
 
-    uploadAudioMutation.mutate({ file, title, myWords });
+    uploadAudioMutation.mutate({ file, title });
+  };
+
+  const onFinalSubmit = (data: ICharecter[]) => {
+    updateScriptMutation.mutate(data);
   };
 
   const removeWord = (word: string) => {
@@ -139,25 +104,24 @@ export default function CreateScript() {
     setEditingCharecter(null);
     setEditedContent("");
   };
+
+  const handleReceiveFinalScript = () => {
+    // charecters 데이터를 임의의 API로 보내기 위해 submitCharectersToAPI 함수 호출
+    onFinalSubmit(charecters);
+  };
   return (
     <ProtectedPage>
       {/* <Helmet>
             <title>Get Blur Image</title>
           </Helmet> */}
 
-      {/* {createPhotoMutation.isSuccess ? ( */}
       {flag ? (
-        //   <ViewPhoto imageUrl={imageUrl} />
-        <>
-          <HStack
-            my={20}
-            mx={10}
-            spacing={10}
-            fontStyle="italic"
-            alignItems="center"
-          >
+        <VStack align="center">
+          <Flex w="100%" my={20} mx={10} fontStyle="italic">
+            <Box w="8%"></Box>
+
             <Box
-              w="800px"
+              w="40%"
               h="600px"
               overflow="auto"
               border="1px solid #ccc"
@@ -166,15 +130,11 @@ export default function CreateScript() {
               <Heading mb="5" size="md">
                 원본 스크립트
               </Heading>
-              <Highlight
-                query={""}
-                styles={{ px: "2", py: "1", rounded: "full", bg: "red.100" }}
-              >
-                {originScript}
-              </Highlight>
+              <Text>{originScript}</Text>
             </Box>
+            <Box w="4%"></Box>
             <Box
-              w="800px"
+              w="40%"
               h="600px"
               overflow="auto"
               border="1px solid #ccc"
@@ -183,33 +143,64 @@ export default function CreateScript() {
               <Heading mb="5" size="md">
                 수정 스크립트
               </Heading>
-              <Highlight
-                query={"이미지"}
-                styles={{ px: "2", py: "1", rounded: "full", bg: "red.100" }}
-              >
-                {modifiedScript}
-              </Highlight>
+              <Text>{modifiedScript}</Text>
             </Box>
-          </HStack>
-          <VStack>
-            <Heading alignContent="center">추가 수정하기</Heading>
-            <Text mt={6}>
-              빨간색은 정확도가 낮게 나온 단어, 초록색은 중요 단어 리스트의
-              단어입니다.
-            </Text>
-            <Text>
-              단어를 클릭하면 오디오 재생 및 수정을 할 수 있습니다. 수정 후
-              제대로 된 스크립트를 받아보세요!
-            </Text>
+            <Box w="8%"></Box>
+          </Flex>
+          <Heading alignContent="center" mt="100px">
+            추가 수정하기
+          </Heading>
+          <Text mt={6} fontSize="lg">
+            빨간색은 정확도가 낮게 나온 단어, 초록색은 중요 단어 리스트의
+            단어입니다.
+          </Text>
+          <Text fontSize="lg">
+            위 스크립트에서 수정된 부분이 어색한 경우 해당 부분만 추가로 직접
+            수정하면 더 좋은 스크립트를 얻을 수 있습니다.
+          </Text>
+          <Text fontSize="lg">
+            단어를 클릭하면 수정을 할 수 있습니다. 수정 후 제대로 된 스크립트를
+            받아보세요!
+          </Text>
+          <HStack w="90%" mt="80px">
+            <VStack w="45%" mt={8}>
+              <Box
+                w="100%"
+                h="300px"
+                overflow="auto"
+                border="1px solid #ccc"
+                p="4"
+              >
+                <Heading mb="5" size="md">
+                  원본 스크립트
+                </Heading>
+                <Text>{originScript}</Text>
+              </Box>
+              <Box
+                w="100%"
+                h="300px"
+                overflow="auto"
+                border="1px solid #ccc"
+                p="4"
+              >
+                <Heading mb="5" size="md">
+                  수정 스크립트
+                </Heading>
+                <Text>{modifiedScript}</Text>
+              </Box>
+            </VStack>
+            <Box w="5%"></Box>
+
             <Box
-              w="800px"
-              h="600px"
+              w="45%"
+              h="608px"
               overflow="auto"
               border="1px solid #ccc"
               p="4"
+              mt={8}
             >
               <Heading mb="5" size="md">
-                수정 스크립트
+                원본 스크립트 수정하기
               </Heading>
               {charecters.map((charecter: ICharecter) => (
                 <Button
@@ -254,8 +245,19 @@ export default function CreateScript() {
                 </ModalContent>
               </Modal>
             </Box>
-          </VStack>
-        </>
+          </HStack>
+          <Button
+            colorScheme="facebook"
+            mt="150px"
+            size="lg"
+            w="50%"
+            h="70px"
+            fontSize="2xl"
+            onClick={handleReceiveFinalScript} // '최종 스크립트 받기' 버튼 클릭 시 이벤트 처리
+          >
+            최종 스크립트 받기
+          </Button>
+        </VStack>
       ) : (
         <>
           <Box
@@ -339,6 +341,7 @@ export default function CreateScript() {
           </Box>
         </>
       )}
+      <Box h="200px"></Box>
     </ProtectedPage>
   );
 }

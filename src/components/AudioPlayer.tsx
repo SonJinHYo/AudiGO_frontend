@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import {
   Box,
-  Button,
   IconButton,
   Slider,
   SliderFilledTrack,

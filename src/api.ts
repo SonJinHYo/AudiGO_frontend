@@ -1,6 +1,10 @@
 import Cookie from "js-cookie";
 import axios from "axios";
-import { IUploadAudioVariables, IUsernameLoginVariables } from "./types";
+import {
+  ICharecter,
+  IUploadAudioVariables,
+  IUsernameLoginVariables,
+} from "./types";
 
 const instance = axios.create({
   baseURL: "http://127.0.0.1:8000/api/v1/",
@@ -49,18 +53,28 @@ export const usernameLogIn = ({
     }
   );
 
-export const uploadAudio = ({
-  file,
-  title,
-  myWords,
-}: IUploadAudioVariables) => {
+export const uploadAudio = ({ file, title }: IUploadAudioVariables) => {
   const form = new FormData();
   form.append("file", file[0]);
   form.append("title", title);
-  form.append("myWords", myWords);
 
   return instance
     .post(`scripts/create`, form, {
+      headers: {
+        "X-CSRFToken": Cookie.get("csrftoken") || "",
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((response) => response.data);
+};
+
+export const updateScript = (charecters: ICharecter[]) => {
+  const jsonCharecters = JSON.stringify(charecters);
+  const form = new FormData();
+  form.append("charecters", jsonCharecters);
+
+  return instance
+    .put(`scripts/create`, form, {
       headers: {
         "X-CSRFToken": Cookie.get("csrftoken") || "",
         "Content-Type": "multipart/form-data",

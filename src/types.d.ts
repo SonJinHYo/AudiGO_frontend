@@ -34,5 +34,30 @@ export interface LoginModalProps {
 export interface IUploadAudioVariables {
   file: FileList;
   title: string;
+}
+
+interface IForm {
+  file: FileList;
+  title: string;
   myWords: string;
+}
+
+interface IScriptInfo {
+  origin_script: string;
+  modified_script: string;
+  charecters: Array<ICharecter>;
+  audio_pk: number;
+  audio_src: string;
+}
+
+interface ICharecter {
+  start_time: string;
+  end_time: string;
+  alternatives: Array<IAlternative>;
+  type: string;
+}
+
+interface IAlternative {
+  confidence: string;
+  content: string;
 }
