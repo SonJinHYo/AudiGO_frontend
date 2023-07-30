@@ -30,3 +30,8 @@ export interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+export interface IUploadAudioVariables {
+  file: FileList;
+  title: string;
+}

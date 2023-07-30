@@ -8,7 +8,6 @@ import {
   useColorMode,
   useColorModeValue,
   useDisclosure,
-  VStack,
   Text,
   Avatar,
   Menu,
@@ -16,6 +15,7 @@ import {
   MenuList,
   MenuItem,
   useToast,
+  Flex,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
@@ -59,6 +59,10 @@ export default function Header() {
       description: "See you later!",
     });
   };
+  const myPage = async () => {
+    await logOut();
+    queryClient.refetchQueries(["me"]);
+  };
 
   return (
     <HStack
@@ -72,12 +76,12 @@ export default function Header() {
           <FaAirbnb size={"48"} />
         </Link>
       </Box>
-      <Box w="60">
+      <HStack w="60">
         <Text as="i" fontSize={45} fontWeight="bold">
           AudiGo
         </Text>
-      </Box>
-      <HStack spacing={2} w="50">
+      </HStack>
+      <Flex gap={2} alignItems="center">
         <IconButton
           onClick={toggleColorMode}
           variant={"ghost"}
@@ -100,12 +104,18 @@ export default function Header() {
                 <Avatar size={"md"} />
               </MenuButton>
               <MenuList>
+                <Link to={`/users/me`}>
+                  <MenuItem>My Scripts</MenuItem>
+                </Link>
+                <Link to={`scripts/create`}>
+                  <MenuItem>Create a Script</MenuItem>
+                </Link>
                 <MenuItem onClick={onLogOut}>Log Out</MenuItem>
               </MenuList>
             </Menu>
           )
         ) : null}
-      </HStack>
+      </Flex>
       <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       <SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose} />
     </HStack>
