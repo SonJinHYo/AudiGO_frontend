@@ -34,4 +34,5 @@ export interface LoginModalProps {
 export interface IUploadAudioVariables {
   file: FileList;
   title: string;
+  myWords: string;
 }

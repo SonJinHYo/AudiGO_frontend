@@ -49,10 +49,16 @@ export const usernameLogIn = ({
     }
   );
 
-export const uploadAudio = ({ file, title }: IUploadAudioVariables) => {
+export const uploadAudio = ({
+  file,
+  title,
+  myWords,
+}: IUploadAudioVariables) => {
   const form = new FormData();
   form.append("file", file[0]);
   form.append("title", title);
+  form.append("myWords", myWords);
+
   return instance
     .post(`scripts/create`, form, {
       headers: {
