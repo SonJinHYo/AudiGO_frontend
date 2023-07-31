@@ -77,7 +77,7 @@ export default function Header() {
       <Box w="10%"></Box>
 
       <Box as="i" fontSize={50} fontWeight="bold" w="20%">
-        AudiGo
+        <Text>AudiGo</Text>
       </Box>
       <Box w="10%"></Box>
 

@@ -204,7 +204,7 @@ export default function CreateScript() {
               </Heading>
               {charecters.map((charecter: ICharecter) => (
                 <Button
-                  key={charecter.start_time}
+                  key={charecter?.start_time}
                   colorScheme={
                     parseFloat(charecter.alternatives[0].confidence) <= 0.8 &&
                     charecter.type === "pronunciation"

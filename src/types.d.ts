@@ -61,3 +61,22 @@ interface IAlternative {
   confidence: string;
   content: string;
 }
+
+interface ICardScript {
+  title: string;
+  modified_script: string;
+}
+
+interface IAudio {
+  script_title: string;
+  origin_script: string;
+  modified_script: string;
+}
+
+interface IUserData {
+  username: string;
+  email: string;
+  using_gpt_token: boolean;
+  rem_gpt_token: boolean;
+  audios: IAudio[];
+}

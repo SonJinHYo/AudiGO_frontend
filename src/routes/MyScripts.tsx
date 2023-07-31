@@ -1,70 +1,102 @@
-import { FaCamera, FaRegHeart, FaStar } from "react-icons/fa";
 import {
-  Box,
   Button,
-  Grid,
-  HStack,
-  Image,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Flex,
+  Heading,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  SimpleGrid,
   Text,
-  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
-import React from "react";
+import { useEffect, useState } from "react";
+import { getMyScripts } from "../api";
+import { IAudio, IUserData } from "../types";
 
-export default function MyScripts() {
-  const gray = useColorModeValue("gray.600", "gray.300");
-  const navigate = useNavigate();
-  const onCameraClick = (event: React.SyntheticEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    // navigate(`/rooms/${pk}/photos`);
+export default function MyInfo() {
+  const [userData, setUserData] = useState<IUserData | null>(null);
+  const [selectedAudio, setSelectedAudio] = useState<IAudio | null>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
+
+  useEffect(() => {
+    // API 호출하여 데이터 가져오기
+    getMyScripts()
+      .then((data) => {
+        setUserData(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  // 모달 열기 함수
+  const handleOpenModal = (audio: IAudio) => {
+    setSelectedAudio(audio);
+    setIsModalOpen(true);
+  };
+  // 모달 닫기 함수
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
   return (
-    <></>
-    // <Link to={`/rooms/${pk}`}>
-    //   <VStack alignItems={"flex-start"}>
-    //     <Box
-    //       w="100%"
-    //       position="relative"
-    //       overflow={"hidden"}
-    //       mb={3}
-    //       rounded="2xl"
-    //     >
-    //       {imageUrl ? (
-    //         <Image objectFit={"cover"} minH="280" src={imageUrl} />
-    //       ) : (
-    //         <Box minH="280px" h="100%" w="100%" p={10} bg="green.400" />
-    //       )}
-    //       <Button
-    //         variant={"unstyled"}
-    //         position="absolute"
-    //         top={0}
-    //         right={0}
-    //         onClick={onCameraClick}
-    //         color="white"
-    //       >
-    //         {isOwner ? <FaCamera size="20px" /> : <FaRegHeart size="20px" />}
-    //       </Button>
-    //     </Box>
-    //     <Box>
-    //       <Grid gap={2} templateColumns={"6fr 1fr"}>
-    //         <Text display={"block"} as="b" noOfLines={1} fontSize="md">
-    //           {name}
-    //         </Text>
-
-    //         <HStack spacing={1} alignItems="center">
-    //           <FaStar size={12} />
-    //           <Text fontSize={"sm"}>{rating}</Text>
-    //         </HStack>
-    //       </Grid>
-    //       <Text fontSize={"sm"} color={gray}>
-    //         {city}, {country}
-    //       </Text>
-    //     </Box>
-    //     <Text fontSize={"sm"} color={gray}>
-    //       <Text as="b">${price}</Text> / night
-    //     </Text>
-    //   </VStack>
-    // </Link>
+    <VStack w="100%">
+      <Heading my={10}>My Script List</Heading>
+      <SimpleGrid
+        w="80%"
+        m={8}
+        spacing={10}
+        templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
+      >
+        {userData?.audios?.map((audio) => (
+          <Card>
+            <CardHeader>
+              <Heading size="md"> {audio.script_title}</Heading>
+            </CardHeader>
+            <CardBody overflow="auto">
+              <Text>
+                {audio.modified_script.length > 100
+                  ? `${audio.modified_script.slice(0, 97)}...`
+                  : audio.modified_script}
+              </Text>
+            </CardBody>
+            <CardFooter>
+              <Button onClick={() => handleOpenModal(audio)}> View Here</Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </SimpleGrid>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <ModalOverlay />
+        <ModalContent maxW="800px" p={1} mt={20} mx={3}>
+          <ModalHeader>{selectedAudio?.script_title}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Flex>
+              <Flex flexDir="column" flex="1" pr={4}>
+                <Heading size="md" mb={4}>
+                  Original Script
+                </Heading>
+                <Text>{selectedAudio?.origin_script}</Text>
+              </Flex>
+              <Flex flexDir="column" flex="1" pl={4}>
+                <Heading size="md" mb={4}>
+                  Modified Script
+                </Heading>
+                <Text>{selectedAudio?.modified_script}</Text>
+              </Flex>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </VStack>
   );
 }
