@@ -24,6 +24,7 @@ import { useForm } from "react-hook-form";
 import { updateScript, uploadAudio } from "../api";
 import ProtectedPage from "../components/ProtectedPage";
 import { IForm, ICharecter } from "../types";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateScript() {
   const { register, handleSubmit, watch, reset } = useForm<IForm>();
@@ -34,6 +35,8 @@ export default function CreateScript() {
   const [originScript, setOriginScript] = useState<string>("");
   const [modifiedScript, setModifiedScript] = useState<string>("");
   const [charecters, setCharecters] = useState<ICharecter[]>([]);
+
+  const navigate = useNavigate();
 
   const uploadAudioMutation = useMutation(uploadAudio, {
     onSuccess: (result: any) => {
@@ -46,8 +49,7 @@ export default function CreateScript() {
 
   const updateScriptMutation = useMutation(updateScript, {
     onSuccess: (data: any) => {
-      console.log(data);
-      console.log(data.finalScript);
+      navigate("/users/me");
     },
   });
 

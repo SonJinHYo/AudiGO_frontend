@@ -4,8 +4,10 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Divider,
   Flex,
   Heading,
+  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -25,6 +27,11 @@ export default function MyInfo() {
   const [selectedAudio, setSelectedAudio] = useState<IAudio | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
+  const [isTextVisible, setIsTextVisible] = useState(true);
+
+  const handleButtonClick = () => {
+    setIsTextVisible(!isTextVisible);
+  };
 
   useEffect(() => {
     // API 호출하여 데이터 가져오기
@@ -48,7 +55,22 @@ export default function MyInfo() {
     setIsModalOpen(false);
   };
   return (
-    <VStack w="100%">
+    <VStack w="100%" align="start" m={10}>
+      <HStack align="center" mt={10}>
+        <Heading> My Information</Heading>
+        <Button onClick={handleButtonClick}>
+          {isTextVisible ? "Hide" : "View"}
+        </Button>
+      </HStack>
+      {isTextVisible && (
+        <VStack m={4} align="start" fontStyle="italic" fontSize="lg">
+          <Divider orientation="vertical" />
+          <Text> Nickname : {userData?.username}</Text>
+          <Text> Kakao Email : {userData?.email}</Text>
+          <Text> Using Token : {userData?.using_gpt_token}</Text>
+        </VStack>
+      )}
+
       <Heading my={10}>My Script List</Heading>
       <SimpleGrid
         w="80%"
@@ -57,7 +79,7 @@ export default function MyInfo() {
         templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
       >
         {userData?.audios?.map((audio) => (
-          <Card>
+          <Card key={audio.script_title}>
             <CardHeader>
               <Heading size="md"> {audio.script_title}</Heading>
             </CardHeader>
