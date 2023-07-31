@@ -10,6 +10,7 @@ export default function SocialLogin() {
   const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?${new URLSearchParams(
     kakaoParams
   ).toString()}`;
+
   return (
     <Box mb={4}>
       <HStack my={8}>
@@ -22,8 +23,8 @@ export default function SocialLogin() {
       <VStack>
         <Button
           as="a"
-          href={kakaoUrl}
           w="100%"
+          href={kakaoUrl}
           leftIcon={<FaComment />}
           colorScheme={"yellow"}
         >

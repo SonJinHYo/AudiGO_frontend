@@ -33,32 +33,13 @@ export default function SignUpModal({ isOpen, onClose }: SignUpModalProps) {
               <InputLeftElement
                 children={
                   <Box color="gray.500">
-                    <FaUserSecret />
-                  </Box>
-                }
-              />
-              <Input variant={"filled"} placeholder="Name" />
-            </InputGroup>
-            <InputGroup>
-              <InputLeftElement
-                children={
-                  <Box color="gray.500">
                     <FaEnvelope />
                   </Box>
                 }
               />
               <Input variant={"filled"} placeholder="Email" />
             </InputGroup>
-            <InputGroup>
-              <InputLeftElement
-                children={
-                  <Box color="gray.500">
-                    <FaUserNinja />
-                  </Box>
-                }
-              />
-              <Input variant={"filled"} placeholder="Username" />
-            </InputGroup>
+
             <InputGroup>
               <InputLeftElement
                 children={
