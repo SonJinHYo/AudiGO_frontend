@@ -38,7 +38,6 @@ export default function MyInfo() {
     getMyScripts()
       .then((data) => {
         setUserData(data);
-        console.log(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);

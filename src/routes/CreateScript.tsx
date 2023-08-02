@@ -35,14 +35,22 @@ export default function CreateScript() {
   const [originScript, setOriginScript] = useState<string>("");
   const [modifiedScript, setModifiedScript] = useState<string>("");
   const [charecters, setCharecters] = useState<ICharecter[]>([]);
+  const [audioPk, setAudioPk] = useState<number>(0);
 
   const navigate = useNavigate();
 
+  interface IResult {
+    origin_script: string;
+    modified_script: string;
+    charecters: ICharecter[];
+    audio_pk: number;
+  }
   const uploadAudioMutation = useMutation(uploadAudio, {
-    onSuccess: (result: any) => {
+    onSuccess: (result: IResult) => {
       setOriginScript(result.origin_script);
       setModifiedScript(result.modified_script);
       setCharecters(result.charecters);
+      setAudioPk(result.audio_pk);
       setFlag(true);
     },
   });
@@ -68,7 +76,7 @@ export default function CreateScript() {
   };
 
   const onFinalSubmit = (data: ICharecter[]) => {
-    updateScriptMutation.mutate(data);
+    updateScriptMutation.mutate({ charecters: data, audioPk: audioPk });
   };
 
   const removeWord = (word: string) => {

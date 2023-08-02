@@ -1,13 +1,13 @@
 import Cookie from "js-cookie";
 import axios from "axios";
 import {
-  ICharecter,
+  IUpdateScript,
   IUploadAudioVariables,
   IUsernameLoginVariables,
 } from "./types";
 
 const instance = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/v1/",
+  baseURL: `http://127.0.0.1:8000/api/v1/`,
   withCredentials: true,
 });
 
@@ -68,10 +68,11 @@ export const uploadAudio = ({ file, title }: IUploadAudioVariables) => {
     .then((response) => response.data);
 };
 
-export const updateScript = (charecters: ICharecter[]) => {
+export const updateScript = ({ charecters, audioPk }: IUpdateScript) => {
   const jsonCharecters = JSON.stringify(charecters);
   const form = new FormData();
   form.append("charecters", jsonCharecters);
+  form.append("audioPk", String(audioPk));
 
   return instance
     .put(`scripts/create`, form, {

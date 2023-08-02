@@ -1,16 +1,3 @@
-export interface IUser {
-  last_login: string;
-  username: string;
-  email: string;
-  date_joined: string;
-  avatar: string;
-  name: string;
-  is_host: boolean;
-  gender: string;
-  language: string;
-  currency: string;
-}
-
 export interface IUsernameLoginVariables {
   username: string;
   password: string;
@@ -79,4 +66,9 @@ interface IUserData {
   using_gpt_token: boolean;
   rem_gpt_token: boolean;
   audios: IAudio[];
+}
+
+interface IUpdateScript {
+  charecters: ICharecter[];
+  audioPk: number;
 }
