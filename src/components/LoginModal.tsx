@@ -14,7 +14,7 @@ import {
   VStack,
   Text,
 } from "@chakra-ui/react";
-import { FaUserNinja, FaLock } from "react-icons/fa";
+import { FaLock, FaUser } from "react-icons/fa";
 import SocialLogin from "./SocialLogin";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IForm, LoginModalProps } from "../types";
@@ -57,7 +57,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
               <InputLeftElement
                 children={
                   <Box color="gray.500">
-                    <FaUserNinja />
+                    <FaUser />
                   </Box>
                 }
               />

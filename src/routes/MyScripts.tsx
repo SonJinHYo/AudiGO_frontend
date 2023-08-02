@@ -27,7 +27,7 @@ export default function MyInfo() {
   const [selectedAudio, setSelectedAudio] = useState<IAudio | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
-  const [isTextVisible, setIsTextVisible] = useState(true);
+  const [isTextVisible, setIsTextVisible] = useState(false);
 
   const handleButtonClick = () => {
     setIsTextVisible(!isTextVisible);

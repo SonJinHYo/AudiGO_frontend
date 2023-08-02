@@ -4,7 +4,6 @@ import {
   Button,
   HStack,
   IconButton,
-  LightMode,
   useColorMode,
   useColorModeValue,
   useDisclosure,
@@ -17,6 +16,7 @@ import {
   useToast,
   Flex,
   Spacer,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
@@ -27,6 +27,11 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export default function Header() {
   const { userLoading, isLoggedIn, user } = useUser();
+  const logoFontSize = useBreakpointValue({
+    lg: "50px",
+    md: "35px",
+    base: "20px",
+  });
 
   const {
     isOpen: isLoginOpen,
@@ -74,12 +79,10 @@ export default function Header() {
           <FaHome size={"48"} />
         </Link>
       </Box>
-      <Box w="10%"></Box>
 
-      <Box as="i" fontSize={50} fontWeight="bold" w="20%">
+      <Box as="i" fontSize={logoFontSize} fontWeight="bold" w="20%">
         <Text>AudiGo</Text>
       </Box>
-      <Box w="10%"></Box>
 
       <Flex gap={2} alignItems="center" w="20%">
         <Spacer />
@@ -91,15 +94,18 @@ export default function Header() {
         />
         {!userLoading ? (
           !isLoggedIn ? (
-            <>
-              <Button onClick={onLoginOpen}>Log in</Button>
-              <LightMode>
-                <Button onClick={onSignUpOpen} colorScheme={"red"}>
-                  Sign up
-                </Button>
-              </LightMode>
-            </>
+            <Button onClick={onLoginOpen} colorScheme={"red"}>
+              Log in
+            </Button>
           ) : (
+            // <>
+            //   <Button onClick={onLoginOpen}>Log in</Button>
+            //   <LightMode>
+            //     <Button onClick={onSignUpOpen} colorScheme={"red"}>
+            //       Sign up
+            //     </Button>
+            //   </LightMode>
+            // </>
             <Menu>
               <MenuButton>
                 <Avatar size={"md"} />

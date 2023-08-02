@@ -264,6 +264,7 @@ export default function CreateScript() {
             h="70px"
             fontSize="2xl"
             onClick={handleReceiveFinalScript} // '최종 스크립트 받기' 버튼 클릭 시 이벤트 처리
+            isLoading={updateScriptMutation.isLoading}
           >
             최종 스크립트 받기
           </Button>
