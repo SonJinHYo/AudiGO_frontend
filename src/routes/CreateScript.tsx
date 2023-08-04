@@ -35,6 +35,8 @@ export default function CreateScript() {
   const [originScript, setOriginScript] = useState<string>("");
   const [modifiedScript, setModifiedScript] = useState<string>("");
   const [charecters, setCharecters] = useState<ICharecter[]>([]);
+  const [charectersBoolArray, setCharectersBoolArray] = useState<boolean[]>([]);
+
   const [audioPk, setAudioPk] = useState<number>(0);
 
   const navigate = useNavigate();
@@ -51,6 +53,10 @@ export default function CreateScript() {
       setModifiedScript(result.modified_script);
       setCharecters(result.charecters);
       setAudioPk(result.audio_pk);
+
+      const createBooleanArray = (length: number): boolean[] =>
+        Array.from<boolean>({ length }).fill(true);
+      setCharectersBoolArray(createBooleanArray(result.charecters.length));
       setFlag(true);
     },
   });
@@ -95,6 +101,13 @@ export default function CreateScript() {
     setEditedContent(charecter.alternatives[0].content);
   };
 
+  const handleContextMenu = (event: React.MouseEvent, index: number) => {
+    event.preventDefault();
+    const updateArray = [...charectersBoolArray];
+    updateArray[index] = false;
+    setCharectersBoolArray(updateArray);
+  };
+
   const handleSaveClick = () => {
     if (editingCharecter) {
       const updatedCharecters = charecters.map((c: any) =>
@@ -132,7 +145,7 @@ export default function CreateScript() {
 
             <Box
               w="40%"
-              h="600px"
+              h="400px"
               overflow="auto"
               border="1px solid #ccc"
               p="4"
@@ -140,12 +153,12 @@ export default function CreateScript() {
               <Heading mb="5" size="md">
                 원본 스크립트
               </Heading>
-              <Text>{originScript}</Text>
+              <Text whiteSpace="pre-line">{originScript}</Text>
             </Box>
             <Box w="4%"></Box>
             <Box
               w="40%"
-              h="600px"
+              h="400px"
               overflow="auto"
               border="1px solid #ccc"
               p="4"
@@ -153,7 +166,7 @@ export default function CreateScript() {
               <Heading mb="5" size="md">
                 수정 스크립트
               </Heading>
-              <Text>{modifiedScript}</Text>
+              <Text whiteSpace="pre-line">{modifiedScript}</Text>
             </Box>
             <Box w="8%"></Box>
           </Flex>
@@ -184,7 +197,7 @@ export default function CreateScript() {
                 <Heading mb="5" size="md">
                   원본 스크립트
                 </Heading>
-                <Text>{originScript}</Text>
+                <Text whiteSpace="pre-line">{originScript}</Text>
               </Box>
               <Box
                 w="100%"
@@ -196,7 +209,7 @@ export default function CreateScript() {
                 <Heading mb="5" size="md">
                   수정 스크립트
                 </Heading>
-                <Text>{modifiedScript}</Text>
+                <Text whiteSpace="pre-line">{modifiedScript}</Text>
               </Box>
             </VStack>
             <Box w="5%"></Box>
@@ -212,26 +225,29 @@ export default function CreateScript() {
               <Heading mb="5" size="md">
                 원본 스크립트 수정하기
               </Heading>
-              {charecters.map((charecter: ICharecter) => (
-                <Button
-                  key={charecter?.start_time}
-                  colorScheme={
-                    parseFloat(charecter.alternatives[0].confidence) <= 0.8 &&
-                    charecter.type === "pronunciation"
-                      ? "red"
-                      : Array.from(words).some((word) =>
-                          charecter.alternatives[0].content.includes(word)
-                        )
-                      ? "teal"
-                      : "gray"
-                  }
-                  m={0.5}
-                  p={1}
-                  onClick={() => handleEditClick(charecter)}
-                >
-                  {charecter.alternatives[0].content}
-                </Button>
-              ))}
+              {charecters.map((charecter: ICharecter, index: number) =>
+                charectersBoolArray[index] ? (
+                  <Button
+                    key={charecter?.start_time}
+                    colorScheme={
+                      parseFloat(charecter.alternatives[0].confidence) <= 0.7 &&
+                      charecter.type === "pronunciation"
+                        ? "red"
+                        : Array.from(words).some((word) =>
+                            charecter.alternatives[0].content.includes(word)
+                          )
+                        ? "teal"
+                        : "gray"
+                    }
+                    m={0.5}
+                    p={1}
+                    onClick={() => handleEditClick(charecter)}
+                    onContextMenu={(event) => handleContextMenu(event, index)}
+                  >
+                    {charecter.alternatives[0].content}
+                  </Button>
+                ) : null
+              )}
               <Modal
                 isOpen={editingCharecter !== null}
                 onClose={handleCloseModal}

@@ -81,7 +81,7 @@ export default function Header() {
       </Box>
 
       <Box as="i" fontSize={logoFontSize} fontWeight="bold" w="20%">
-        <Text>AudiGo</Text>
+        <Text align="center">AudiGo</Text>
       </Box>
 
       <Flex gap={2} alignItems="center" w="20%">
@@ -98,14 +98,6 @@ export default function Header() {
               Log in
             </Button>
           ) : (
-            // <>
-            //   <Button onClick={onLoginOpen}>Log in</Button>
-            //   <LightMode>
-            //     <Button onClick={onSignUpOpen} colorScheme={"red"}>
-            //       Sign up
-            //     </Button>
-            //   </LightMode>
-            // </>
             <Menu>
               <MenuButton>
                 <Avatar size={"md"} />

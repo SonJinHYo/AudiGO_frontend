@@ -77,8 +77,8 @@ export default function MyInfo() {
         spacing={10}
         templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
       >
-        {userData?.audios?.map((audio) => (
-          <Card key={audio.script_title}>
+        {userData?.audios?.map((audio, index: number) => (
+          <Card key={index}>
             <CardHeader>
               <Heading size="md"> {audio.script_title}</Heading>
             </CardHeader>
@@ -106,19 +106,25 @@ export default function MyInfo() {
                 <Heading size="md" mb={4}>
                   Original Script
                 </Heading>
-                <Text>{selectedAudio?.origin_script}</Text>
+                <Text whiteSpace="pre-line">
+                  {selectedAudio?.origin_script}
+                </Text>
               </Flex>
               <Flex flexDir="column" flex="1" pl={4}>
                 <Heading size="md" mb={4}>
                   Modified Script
                 </Heading>
-                <Text>{selectedAudio?.modified_script}</Text>
+                <Text whiteSpace="pre-line">
+                  {selectedAudio?.modified_script}
+                </Text>
               </Flex>
               <Flex flexDir="column" flex="1" pl={4}>
                 <Heading size="md" mb={4}>
                   Summary Script
                 </Heading>
-                <Text>{selectedAudio?.summary_script}</Text>
+                <Text whiteSpace="pre-line">
+                  {selectedAudio?.summary_script}
+                </Text>
               </Flex>
             </Flex>
           </ModalBody>
