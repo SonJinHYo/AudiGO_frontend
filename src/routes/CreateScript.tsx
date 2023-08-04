@@ -129,8 +129,15 @@ export default function CreateScript() {
   };
 
   const handleReceiveFinalScript = () => {
-    // charecters 데이터를 임의의 API로 보내기 위해 submitCharectersToAPI 함수 호출
-    onFinalSubmit(charecters);
+    const newCharecters = [];
+
+    for (let i = 0; i < charectersBoolArray.length; i++) {
+      if (charectersBoolArray[i]) {
+        newCharecters.push(charecters[i]);
+      }
+    }
+
+    onFinalSubmit(newCharecters);
   };
   return (
     <ProtectedPage>

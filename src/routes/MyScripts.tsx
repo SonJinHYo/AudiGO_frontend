@@ -95,9 +95,9 @@ export default function MyInfo() {
           </Card>
         ))}
       </SimpleGrid>
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} size="full">
         <ModalOverlay />
-        <ModalContent maxW="800px" p={1} mt={20} mx={3}>
+        <ModalContent w="90%" p={1} mt={20} mx={3}>
           <ModalHeader>{selectedAudio?.script_title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
