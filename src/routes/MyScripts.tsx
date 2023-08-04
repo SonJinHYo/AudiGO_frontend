@@ -114,6 +114,12 @@ export default function MyInfo() {
                 </Heading>
                 <Text>{selectedAudio?.modified_script}</Text>
               </Flex>
+              <Flex flexDir="column" flex="1" pl={4}>
+                <Heading size="md" mb={4}>
+                  Summary Script
+                </Heading>
+                <Text>{selectedAudio?.summary_script}</Text>
+              </Flex>
             </Flex>
           </ModalBody>
         </ModalContent>

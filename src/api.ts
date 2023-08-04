@@ -7,7 +7,7 @@ import {
 } from "./types";
 
 const instance = axios.create({
-  baseURL: `http://127.0.0.1:8000/api/v1/`,
+  baseURL: `http://ecs-lb-1023174556.ap-northeast-2.elb.amazonaws.com/api/v1/`,
   withCredentials: true,
 });
 

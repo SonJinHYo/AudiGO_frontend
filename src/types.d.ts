@@ -58,6 +58,7 @@ interface IAudio {
   script_title: string;
   origin_script: string;
   modified_script: string;
+  summary_script: string;
 }
 
 interface IUserData {
